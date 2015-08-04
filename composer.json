@@ -1,0 +1,12 @@
+{
+    "name": "aeris/zf-auth",
+    "description": "Authentication/Authorization components for Zend Framework 2",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Edan Schwartz",
+            "email": "eschwartz@aerisweather.com"
+        }
+    ],
+    "require": {}
+}
