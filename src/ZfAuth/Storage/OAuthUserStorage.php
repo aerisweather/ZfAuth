@@ -25,30 +25,15 @@ class OAuthUserStorage extends NonPersistent {
 	/** @var mixed */
 	protected $identity;
 
-	public function isEmpty() {
-		$hasOAuthRequestParams = $this->request->getQuery('access_token');
-
-		if (!$hasOAuthRequestParams) {
-			return false;
-		}
-
-		return !$this->getIdentity();
-	}
-
 	public function read() {
-		return $this->getIdentity();
-	}
-
-	public function clear() {
-		$this->identity = null;
+		if ($this->isEmpty()) {
+			$this->write($this->getIdentity());
+		}
+		return parent::read();
 	}
 
 	/** @return null|mixed */
 	protected function getIdentity() {
-		if ($this->identity) {
-			return $this->identity;
-		}
-
 		$accessToken = $this->request->getQuery('access_token', $this->request->getPost('access_token'));
 
 		if ($accessToken === null) {
