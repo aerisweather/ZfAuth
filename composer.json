@@ -8,5 +8,11 @@
             "email": "eschwartz@aerisweather.com"
         }
     ],
-    "require": {}
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Aeris\\ZfAuth\\": "src/ZfAuth/",
+            "Aeris\\ZfAuthTest": "tests/ZfAuthTest"
+        }
+    }
 }
