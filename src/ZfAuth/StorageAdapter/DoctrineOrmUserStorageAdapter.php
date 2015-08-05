@@ -35,4 +35,18 @@ class DoctrineOrmUserStorageAdapter implements IdentityStorageAdapterInterface {
 				'username' => $username
 			]);
 	}
+
+	/**
+	 * @param EntityManagerInterface $entityManager
+	 */
+	public function setEntityManager($entityManager) {
+		$this->entityManager = $entityManager;
+	}
+
+	/**
+	 * @param string $userEntityClass (FQCN)
+	 */
+	public function setUserEntityClass($userEntityClass) {
+		$this->userEntityClass = $userEntityClass;
+	}
 }
