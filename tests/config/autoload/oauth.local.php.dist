@@ -1,0 +1,10 @@
+<?php
+return array(
+	'zf-oauth2' => [
+		'db' => [
+			'dsn' => 'mysql:dbname=zf-auth-test;host=127.0.0.1',
+			'username' => 'USERNAME',
+			'password' => 'PASSWORD',
+		]
+	]
+);
