@@ -4,18 +4,17 @@
 namespace Aeris\ZfAuth\Storage;
 
 
-use Aeris\ZfAuth\Request\OAuth2RequestFactory;
 use Aeris\ZfAuth\StorageAdapter\IdentityStorageAdapterInterface;
+use OAuth2\Request as OAuth2Request;
 use OAuth2\Server;
 use Zend\Authentication\Storage\NonPersistent;
-use Zend\Http\Request as HttpRequest;
 
 class OAuthUserStorage extends NonPersistent {
 
 	/** @var Server */
 	protected $oauthServer;
 
-	/** @var HttpRequest */
+	/** @var OAuth2Request */
 	protected $request;
 	// we can get this from $sm->get('Application')->getMvcEvent()->getRequest();
 
@@ -34,14 +33,13 @@ class OAuthUserStorage extends NonPersistent {
 
 	/** @return null|mixed */
 	protected function getIdentity() {
-		$accessToken = $this->request->getQuery('access_token', $this->request->getPost('access_token'));
+		$accessToken = $this->request->query('access_token');
 
 		if ($accessToken === null) {
 			return null;
 		}
 
-		$oAuthRequest = OAuth2RequestFactory::create($this->request);
-		$accessTokenData = $this->oauthServer->getAccessTokenData($oAuthRequest);
+		$accessTokenData = $this->oauthServer->getAccessTokenData($this->request);
 
 		return $this->identity = $this->identityStorageAdapter
 			->findByUsername($accessTokenData['user_id']);
@@ -56,10 +54,10 @@ class OAuthUserStorage extends NonPersistent {
 	}
 
 	/**
-	 * @param HttpRequest $request
+	 * @param OAuth2Request $request
 	 * @return $this
 	 */
-	public function setRequest(HttpRequest $request) {
+	public function setRequest(OAuth2Request $request) {
 		$this->request = $request;
 	}
 
