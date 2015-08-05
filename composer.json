@@ -12,8 +12,9 @@
         "zfcampus/zf-oauth2": "~1.0.2",
         "bshaffer/oauth2-server-php": "~1.3",
         "zendframework/zend-http": "~2.3",
-        "zendframework/zend-authentication": "^2.5",
-        "doctrine/orm": "^2.5"
+        "zendframework/zend-authentication": "^2.4",
+        "doctrine/orm": "^2.5",
+        "aeris/fn": "^1.0"
     },
     "autoload": {
         "psr-4": {
