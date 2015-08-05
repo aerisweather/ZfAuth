@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="oauth_clients")
  * @ORM\Entity
  */
-class OauthClients {
+class OAuthClient {
 	/**
 	 * @var string
 	 *
@@ -88,7 +88,7 @@ class OauthClients {
 	 * Encrypts and sets clientSecret
 	 *
 	 * @param string $rawClientSecret
-	 * @return OauthClients
+	 * @return OAuthClient
 	 */
 	public function setClientSecret($rawClientSecret) {
 		$this->clientSecret = $this->getEncryptor()
@@ -114,7 +114,7 @@ class OauthClients {
 	 * Set redirectUri
 	 *
 	 * @param string $redirectUri
-	 * @return OauthClients
+	 * @return OAuthClient
 	 */
 	public function setRedirectUri($redirectUri) {
 		$this->redirectUri = $redirectUri;
@@ -135,7 +135,7 @@ class OauthClients {
 	 * Set grantTypes
 	 *
 	 * @param string $grantTypes
-	 * @return OauthClients
+	 * @return OAuthClient
 	 */
 	public function setGrantTypes($grantTypes) {
 		$this->grantTypes = $grantTypes;
@@ -156,7 +156,7 @@ class OauthClients {
 	 * Set scope
 	 *
 	 * @param string $scope
-	 * @return OauthClients
+	 * @return OAuthClient
 	 */
 	public function setScope($scope) {
 		$this->scope = $scope;
@@ -177,7 +177,7 @@ class OauthClients {
 	 * Set userId
 	 *
 	 * @param string $userId
-	 * @return OauthClients
+	 * @return OAuthClient
 	 */
 	public function setUserId($userId) {
 		$this->userId = $userId;

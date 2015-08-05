@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="oauth_access_tokens")
  * @ORM\Entity
  */
-class OauthAccessTokens {
+class OAuthAccessToken {
 	/**
 	 * @var string
 	 *
@@ -48,7 +48,7 @@ class OauthAccessTokens {
 	 * Set expires
 	 *
 	 * @param \DateTime $expires
-	 * @return OauthAccessTokens
+	 * @return OAuthAccessToken
 	 */
 	public function setExpires($expires) {
 		$this->expires = $expires;
@@ -69,7 +69,7 @@ class OauthAccessTokens {
 	 * Set scope
 	 *
 	 * @param string $scope
-	 * @return OauthAccessTokens
+	 * @return OAuthAccessToken
 	 */
 	public function setScope($scope) {
 		$this->scope = $scope;

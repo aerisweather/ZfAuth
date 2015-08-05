@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="oauth_refresh_tokens")
  * @ORM\Entity
  */
-class OauthRefreshTokens {
+class OAuthRefreshToken {
 	/**
 	 * @var string
 	 *
@@ -48,7 +48,7 @@ class OauthRefreshTokens {
 	 * Set expires
 	 *
 	 * @param \DateTime $expires
-	 * @return OauthRefreshTokens
+	 * @return OAuthRefreshToken
 	 */
 	public function setExpires($expires) {
 		$this->expires = $expires;
@@ -69,7 +69,7 @@ class OauthRefreshTokens {
 	 * Set scope
 	 *
 	 * @param string $scope
-	 * @return OauthRefreshTokens
+	 * @return OAuthRefreshToken
 	 */
 	public function setScope($scope) {
 		$this->scope = $scope;

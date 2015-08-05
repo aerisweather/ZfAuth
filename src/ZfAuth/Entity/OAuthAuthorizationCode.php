@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="oauth_authorization_codes")
  * @ORM\Entity
  */
-class OauthAuthorizationCodes {
+class OAuthAuthorizationCode {
 	/**
 	 * @var string
 	 *
@@ -35,7 +35,7 @@ class OauthAuthorizationCodes {
 	private $expires;
 
 	/**
-	 * @var \Aeris\ZfAuth\Entity\OauthScopes
+	 * @var \Aeris\ZfAuth\Entity\OAuthScope
 	 *
 	 * @ORM\ManyToOne(targetEntity="Aeris\ZfAuth\Model\OauthScopes")
 	 * @ORM\JoinColumns({
@@ -45,7 +45,7 @@ class OauthAuthorizationCodes {
 	private $oauthScopesScope;
 
 	/**
-	 * @var \Aeris\ZfAuth\Entity\OauthClients
+	 * @var \Aeris\ZfAuth\Entity\OAuthClient
 	 *
 	 * @ORM\ManyToOne(targetEntity="Aeris\ZfAuth\Model\OauthClients")
 	 * @ORM\JoinColumns({
@@ -68,7 +68,7 @@ class OauthAuthorizationCodes {
 	 * Set redirectUri
 	 *
 	 * @param string $redirectUri
-	 * @return OauthAuthorizationCodes
+	 * @return OAuthAuthorizationCode
 	 */
 	public function setRedirectUri($redirectUri) {
 		$this->redirectUri = $redirectUri;
@@ -89,7 +89,7 @@ class OauthAuthorizationCodes {
 	 * Set expires
 	 *
 	 * @param \DateTime $expires
-	 * @return OauthAuthorizationCodes
+	 * @return OAuthAuthorizationCode
 	 */
 	public function setExpires($expires) {
 		$this->expires = $expires;
@@ -109,10 +109,10 @@ class OauthAuthorizationCodes {
 	/**
 	 * Set oauthScopesScope
 	 *
-	 * @param \Aeris\ZfAuth\Entity\OauthScopes $oauthScopesScope
-	 * @return OauthAuthorizationCodes
+	 * @param \Aeris\ZfAuth\Entity\OAuthScope $oauthScopesScope
+	 * @return OAuthAuthorizationCode
 	 */
-	public function setOauthScopesScope(\Aeris\ZfAuth\Entity\OauthScopes $oauthScopesScope = null) {
+	public function setOauthScopesScope(\Aeris\ZfAuth\Entity\OAuthScope $oauthScopesScope = null) {
 		$this->oauthScopesScope = $oauthScopesScope;
 
 		return $this;
@@ -121,7 +121,7 @@ class OauthAuthorizationCodes {
 	/**
 	 * Get oauthScopesScope
 	 *
-	 * @return \Aeris\ZfAuth\Entity\OauthScopes
+	 * @return \Aeris\ZfAuth\Entity\OAuthScope
 	 */
 	public function getOauthScopesScope() {
 		return $this->oauthScopesScope;
@@ -130,10 +130,10 @@ class OauthAuthorizationCodes {
 	/**
 	 * Set oauthClientsClient
 	 *
-	 * @param \Aeris\ZfAuth\Entity\OauthClients $oauthClientsClient
-	 * @return OauthAuthorizationCodes
+	 * @param \Aeris\ZfAuth\Entity\OAuthClient $oauthClientsClient
+	 * @return OAuthAuthorizationCode
 	 */
-	public function setOauthClientsClient(\Aeris\ZfAuth\Entity\OauthClients $oauthClientsClient = null) {
+	public function setOauthClientsClient(\Aeris\ZfAuth\Entity\OAuthClient $oauthClientsClient = null) {
 		$this->oauthClientsClient = $oauthClientsClient;
 
 		return $this;
@@ -142,7 +142,7 @@ class OauthAuthorizationCodes {
 	/**
 	 * Get oauthClientsClient
 	 *
-	 * @return \Aeris\ZfAuth\Entity\OauthClients
+	 * @return \Aeris\ZfAuth\Entity\OAuthClient
 	 */
 	public function getOauthClientsClient() {
 		return $this->oauthClientsClient;

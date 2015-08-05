@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="oauth_scopes")
  * @ORM\Entity
  */
-class OauthScopes {
+class OAuthScope {
 	/**
 	 * @var string
 	 *
@@ -48,7 +48,7 @@ class OauthScopes {
 	 * Set isDefault
 	 *
 	 * @param boolean $isDefault
-	 * @return OauthScopes
+	 * @return OAuthScope
 	 */
 	public function setIsDefault($isDefault) {
 		$this->isDefault = $isDefault;
@@ -69,7 +69,7 @@ class OauthScopes {
 	 * Set description
 	 *
 	 * @param string $description
-	 * @return OauthScopes
+	 * @return OAuthScope
 	 */
 	public function setDescription($description) {
 		$this->description = $description;
