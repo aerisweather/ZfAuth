@@ -7,6 +7,10 @@ namespace Aeris\ZfAuth\Storage;
 use Zend\Authentication\Storage\StorageInterface;
 use Aeris\Fn;
 
+/**
+ * Stores data in a chained series of storages.
+ * Reads from the first storage to return a non-null value
+ */
 class ChainedStorage implements StorageInterface {
 
 	/** @var StorageInterface[] */
@@ -52,7 +56,7 @@ class ChainedStorage implements StorageInterface {
 	 * @return void
 	 */
 	public function write($contents) {
-		// TODO: Implement write() method.
+		throw new \Exception('ChainedStorage does not implement write');
 	}
 
 	/**
@@ -62,7 +66,7 @@ class ChainedStorage implements StorageInterface {
 	 * @return void
 	 */
 	public function clear() {
-		// TODO: Implement clear() method.
+		throw new \Exception('ChainedStorage does not implement clear');
 	}
 
 }
