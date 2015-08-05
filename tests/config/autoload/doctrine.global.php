@@ -12,12 +12,13 @@ return [
 				'cache' => 'array',
 				'paths' => [
 					__DIR__ . '/../../ZfAuthTest/Fixture',
-					__DIR__ . '/../../../src/ZfAuth'
+					__DIR__ . '/../../../src/ZfAuth/Entity'
 				]
 			],
 			'orm_default' => [
 				'drivers' => [
-					'ZfAuthTest' => 'annotation_driver'
+					'Aeris\ZfAuth' => 'annotation_driver',
+					'Aeris\ZfAuthTest' => 'annotation_driver',
 				]
 			]
 		],
