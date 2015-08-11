@@ -1,3 +1,5 @@
+DROP SCHEMA `zf-auth-test`;
+
 CREATE SCHEMA IF NOT EXISTS `zf-auth-test`
   DEFAULT CHARACTER SET utf8
   COLLATE utf8_general_ci;
