@@ -42,7 +42,9 @@ class OAuthClientIdentityProvider implements IdentityProviderInterface {
 			return null;
 		}
 
-		return new OAuthClientIdentity();
+		$clientIdentity = new OAuthClientIdentity();
+		$clientIdentity->setClientId($this->request->query('client_id'));
+		return $clientIdentity;
 	}
 
 	/**

@@ -10,7 +10,21 @@ namespace Aeris\ZfAuth\Identity;
  */
 class OAuthClientIdentity implements IdentityInterface {
 
+	/** @var string */
+	protected $clientId;
+
 	public function getRoles() {
 		return ['oauth_client'];
+	}
+
+	public function getClientId() {
+		return $this->clientId;
+	}
+
+	/**
+	 * @param string $clientId
+	 */
+	public function setClientId($clientId) {
+		$this->clientId = $clientId;
 	}
 }

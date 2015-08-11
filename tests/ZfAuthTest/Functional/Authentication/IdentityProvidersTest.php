@@ -3,6 +3,7 @@
 namespace Aeris\ZfAuthTest\Functional\Authentication;
 
 
+use Aeris\ZfAuth\Identity\OAuthClientIdentity;
 use Aeris\ZfAuth\IdentityProvider\IdentityProviderInterface;
 use Aeris\ZfAuthTest\Fixture\Entity\User;
 use Aeris\ZfAuthTest\Functional\FunctionalTestCase;
@@ -50,7 +51,10 @@ class IdentityProvidersTest extends FunctionalTestCase {
 			'client_secret' => 'testSecret'
 		]);
 
-		$this->assertInstanceOf('\Aeris\ZfAuth\Identity\OAuthClientIdentity', $this->getCurrentIdentity());
+		/** @var OAuthClientIdentity $identity */
+		$identity = $this->getCurrentIdentity();
+		$this->assertInstanceOf('\Aeris\ZfAuth\Identity\OAuthClientIdentity', $identity);
+		$this->assertEquals('testClient', $identity->getClientId(), 'Should set the clientId');
 	}
 
 	/** @test */
