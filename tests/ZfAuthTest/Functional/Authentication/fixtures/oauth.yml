@@ -1,0 +1,12 @@
+Aeris\ZfAuth\Entity\OAuthClient:
+  oAuthClient (template):
+    clientId: testClient
+    # testSecret
+    setEncryptedClientSecret: ["$2a$10$WchJTPcrKgMvy/RafsXTaedKIMKxinq/OI31CkW/j5hxzlEmfNsBC"]
+    redirectUri: /oauth/receivecode
+  testOAuthClient (extends oAuthClient): []
+
+Aeris\ZfAuthTest\Fixture\Entity\User:
+  testUser:
+    username: testUser
+    password: testPass
