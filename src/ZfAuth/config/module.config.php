@@ -1,4 +1,5 @@
 <?php
+$obj = new \Aeris\ZfAuth\Repository\DoctrineOrmIdentityRepository();
 return [
 	'zf_auth' => [
 		'authentication' => [
@@ -7,40 +8,44 @@ return [
 		]
 	],
 	'service_manager' => [
-		'factory' => [
-			'OAuth2\Request' => '\Aeris\ZfAuth\Factory\OAuth2RequestFactory'
+		'factories' => [
+			'OAuth2\Request' => '\Aeris\ZfAuth\Factory\OAuth2RequestFactory',
+			'OAuth2\Server' => '\Aeris\ZfAuth\Factory\OAuth2ServerFactory',
+		],
+		'aliases' => [
+			'entity_manager' => 'doctrine.entitymanager.orm_default',
 		],
 		'di' => [
-			'Aeris\ZfAuth\IdentityStorageAdapter' => [
-				'class' => '\Aeris\ZfAuth\StorageAdapter\DoctrineOrmUserStorageAdapter',
-				'args' => [
+			'Aeris\ZfAuth\IdentityRepository' => [
+				'class' => '\Aeris\ZfAuth\Repository\DoctrineOrmIdentityRepository',
+				'setters' => [
 					'entityManager' => '@entity_manager',
 					'userEntityClass' => '%zf_auth.authentication.user_entity_class'
 				]
 			],
-			'Aeris\ZfAuth\Storage\OAuthUserStorage' => [
-				'class' => '\Aeris\ZfAuth\Storage\OAuthUserStorage',
+			'Aeris\ZfAuth\IdentityProvider\OAuthUserIdentityProvider' => [
+				'class' => '\Aeris\ZfAuth\IdentityProvider\OAuthUserIdentityProvider',
 				'setters' => [
 					'request' => '@OAuth2\Request',
-					'oauthServer' => '@ZF\OAuth2\Service\OAuth2Server',
-					'identityStorageAdapter' => '@Aeris\ZfAuth\IdentityStorageAdapter',
+					'oauthServer' => '@OAuth2\Server',
+					'identityAdapter' => '@Aeris\ZfAuth\IdentityRepository',
 				]
 			],
-			'Aeris\ZfAuth\Storage\OAuthClientIdentityStorage' => [
-				'class' => '\Aeris\ZfAuth\Storage\OAuthUserStorage',
+			'Aeris\ZfAuth\IdentityProvider\OAuthClientIdentityProvider' => [
+				'class' => '\Aeris\ZfAuth\IdentityProvider\OAuthClientIdentityProvider',
 				'setters' => [
 					'request' => '@OAuth2\Request',
-					'oauthServer' => '@ZF\OAuth2\Service\OAuth2Server'
+					'oauthServer' => '@OAuth2\Server'
 				]
 			],
-			'Aeris\ZfAuth\Storage\AnonymousIdentityStorage' => '\Aeris\ZfAuth\Storage\AnonymousIdentityStorage',
-			'Aeris\ZfAuth\Storage\IdentityStorage' => [
-				'class' => '\Aeris\ZfAuth\Storage\ChainedStorage',
-				'args' => [
-					$storageChain = [
-						'@Aeris\ZfAuth\Storage\OAuthUserStorage',
-						'@Aeris\ZfAuth\Storage\OAuthClientIdentityStorage',
-						'@Aeris\ZfAuth\Storage\AnonymousIdentityStorage'
+			'Aeris\ZfAuth\IdentityProvider\AnonymousIdentityProvider' => '\Aeris\ZfAuth\IdentityProvider\AnonymousIdentityProvider',
+			'Aeris\ZfAuth\IdentityProvider' => [
+				'class' => 'Aeris\ZfAuth\IdentityProvider\ChainedIdentityProvider',
+				'setters' => [
+					'providers' => [
+						'@Aeris\ZfAuth\IdentityProvider\OAuthUserIdentityProvider',
+						'@Aeris\ZfAuth\IdentityProvider\OAuthClientIdentityProvider',
+						'@Aeris\ZfAuth\IdentityProvider\AnonymousIdentityProvider'
 					]
 				]
 			]
