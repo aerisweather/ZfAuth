@@ -11,7 +11,7 @@ return [
 				'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
 				'cache' => 'array',
 				'paths' => [
-					__DIR__ . '/../../ZfAuthTest/Fixture',
+					__DIR__ . '/../../ZfAuthTest/Fixture/Entity',
 					__DIR__ . '/../../../src/ZfAuth/Entity'
 				]
 			],

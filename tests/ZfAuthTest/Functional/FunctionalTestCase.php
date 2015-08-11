@@ -20,10 +20,10 @@ class FunctionalTestCase extends AbstractTestCase {
 
 	protected function requestAccessToken(array $requestParams = []) {
 		$requestParams = array_replace([
-			'client_id' => 'testclient',
-			'client_secret' => 'testclient',
-			'username' => 'test_username',
-			'password' => 'test_password',
+			'client_id' => 'testClient',
+			'client_secret' => 'testSecret',
+			'username' => 'testUser',
+			'password' => 'testPass',
 			'grant_type' => 'password'
 		], $requestParams);
 

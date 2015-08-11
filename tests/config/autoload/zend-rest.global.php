@@ -7,6 +7,12 @@ return [
 
 		'errors' => [
 			[
+				'error'           => \Zend\Mvc\Application::ERROR_ROUTER_NO_MATCH,
+				'http_code'        => 404,
+				'application_code' => 'invalid_request',
+				'details'         => 'The requested endpoint or action is invalid and not supported.',
+			],
+			[
 				'error' => '\Exception',
 				'http_code' => 500,
 				'application_code' => 'invalid_request',
