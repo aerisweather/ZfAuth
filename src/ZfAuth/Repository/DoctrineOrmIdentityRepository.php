@@ -1,12 +1,12 @@
 <?php
 
+namespace Aeris\ZfAuth\Repository;
 
-namespace Aeris\ZfAuth\StorageAdapter;
 
-
+use Aeris\ZfAuth\Repository\IdentityRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-class DoctrineOrmUserStorageAdapter implements IdentityStorageAdapterInterface {
+class DoctrineOrmIdentityRepository implements IdentityRepositoryInterface {
 
 	/** @var EntityManagerInterface  */
 	protected $entityManager;
