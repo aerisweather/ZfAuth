@@ -12,14 +12,11 @@ return [
 			'OAuth2\Request' => '\Aeris\ZfAuth\Factory\OAuth2RequestFactory',
 			'OAuth2\Server' => '\Aeris\ZfAuth\Factory\OAuth2ServerFactory',
 		],
-		'aliases' => [
-			'entity_manager' => 'doctrine.entitymanager.orm_default',
-		],
 		'di' => [
 			'Aeris\ZfAuth\IdentityRepository' => [
 				'class' => '\Aeris\ZfAuth\Repository\DoctrineOrmIdentityRepository',
 				'setters' => [
-					'entityManager' => '@entity_manager',
+					'entityManager' => '@doctrine.entitymanager.orm_default',
 					'userEntityClass' => '%zf_auth.authentication.user_entity_class'
 				]
 			],
