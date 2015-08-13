@@ -63,6 +63,33 @@ You can see sample configuration files for wiring up `Zf\OAuth2`, and `DoctrineO
 
 ## Authentication
 
+ZfAuth attempts to authenticate requests using a set of `IdentityProviders`. By default, users can be authenticated as:
+
+* User implementing `IdentityInterface`, as configured in `zf_auth.authentication.user_entity_class` (a request with an `access_token`)
+* `\Aeris\ZfAuth\Identity\OAuthClientIdentity` (a request with only client_id/client_secret)
+* `\Aeris\ZfAuth\Identity\AnonymousIdentity` (a request with no authentication keys)
+
+### Handling invalid credentials
+
+If a request contains authentication credentials, but the identity provider is unable to provide an identity -- eg. the request contains an invalid/expired `access_token` -- an `MvcEvent::EVENT_DISPATCH_ERROR` event will be triggered, containing an `\Aeris\ZfAuth\Exception\AuthenticationException`. 
+
+This can be handled by whatever view mechanism you wish. If you're using `Aeris\ZendRestModule`, you would handle `AuthenticationExceptions` in your `errors` config:
+
+```php
+return [
+	'zend_rest' => [
+		'errors' => [
+			// ...
+			[
+				'error' => '\Aeris\ZfAuth\Exception\AuthenticationException',
+				'http_code' => 401,
+				'application_code' => 'authentication_error',
+				'details' => 'The request failed to be authenticated. Check your access keys, and try again.'
+			]
+		]
+	]
+]
+```
 
 ### Identity Providers
 
@@ -104,6 +131,15 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
 class SuperSpecialIdentityProvider implements IdentityProviderInterface, ServiceLocatorAwareInterface {
 	use \Zend\ServiceManager\ServiceLocatorAwareTrait;
+
+	public function canAuthenticate() {
+		/** @var Request $request */
+        $request = $this->serviceLocator->get('Application')
+            ->getMvcEvent()
+            ->getRequest();
+		
+		return $request->getQuery('super_secret_password') !== null;
+	}
 
 	/** @return \Aeris\ZfAuth\Identity\IdentityInterface */
 	public function getIdentity() {
