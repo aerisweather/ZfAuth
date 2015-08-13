@@ -10,5 +10,6 @@ data/cache/
 data/*.bak
 data/DoctrineORMModule/
 swap-eb-apps.sh
+tests/data/cache/*
 
 *.local.php

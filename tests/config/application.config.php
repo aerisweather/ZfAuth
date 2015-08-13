@@ -8,7 +8,8 @@ return [
 		'ZF\ContentNegotiation',
 		'Aeris\ZendRestModule',
 		'Aeris\ZfAuth',
-		'Aeris\ZfDiConfig'
+		'Aeris\ZfDiConfig',
+		'Aeris\ZfAuthTest\Fixture',
 	],
 
 	// These are various options for the listeners attached to the ModuleManager
@@ -21,6 +22,7 @@ return [
 			'./module',
 			'./vendor',
 			'../../src',
+			'../ZfAuthTest/Fixture'
 		],
 
 		// An array of paths from which to glob configuration files after
