@@ -6,6 +6,7 @@ namespace Aeris\ZfAuth\IdentityProvider;
 use Aeris\ZfAuth\Identity\OAuthClientIdentity;
 use OAuth2\Server;
 use OAuth2\Request as OAuth2Request;
+use Aeris\Fn;
 
 /**
  * Provides a user acting on behalf of an oAuth client.
@@ -17,6 +18,21 @@ class OAuthClientIdentityProvider implements IdentityProviderInterface {
 
 	/** @var Server */
 	protected $oauthServer;
+
+	/**
+	 * Can this provider authenticate the current request?
+	 *
+	 * Should return true if the means for authentication are available,
+	 * even if the user cannot be authenticate
+	 * (eg. a username/password are provided, but they do not match a real user)
+	 *
+	 * @return boolean
+	 */
+	public function canAuthenticate() {
+		return Fn\all(['client_id', 'client_secret'], function($k) {
+			return $this->request->query($k) !== null;
+		});
+	}
 
 	public function getIdentity() {
 		// A little hack so client's don't have to add these

@@ -4,6 +4,7 @@
 namespace Aeris\ZfAuth\IdentityProvider;
 
 use Aeris\ZfAuth\Identity\IdentityInterface;
+use Aeris\Fn;
 
 /**
  * Checks a set of IdentityProviders, and provides the identity from
@@ -22,18 +23,27 @@ class ChainedIdentityProvider implements IdentityProviderInterface {
 	}
 
 
+	public function canAuthenticate() {
+		return $this->findProvider() !== null;
+	}
+
+
 	/** @return IdentityInterface */
 	public function getIdentity() {
-		$identity = null;
+		$provider = $this->findProvider();
 
-		foreach ($this->providers as $provider) {
-			$identity = $provider->getIdentity();
-			if ($identity !== null) {
-				break;
-			}
+		if (!$provider) {
+			return null;
 		}
 
-		return $identity;
+		return $provider->getIdentity();
+	}
+
+	/** @return IdentityProviderInterface */
+	protected function findProvider() {
+		return Fn\find($this->providers, function(IdentityProviderInterface $provider) {
+			return $provider->canAuthenticate();
+		});
 	}
 
 	/**

@@ -20,6 +20,10 @@ class OAuthUserIdentityProvider implements IdentityProviderInterface {
 	/** @var IdentityRepositoryInterface */
 	protected $identityAdapter;
 
+	public function canAuthenticate() {
+		return $this->request->query('access_token') !== null;
+	}
+
 	/** @return IdentityInterface */
 	public function getIdentity() {
 		$accessToken = $this->request->query('access_token');
