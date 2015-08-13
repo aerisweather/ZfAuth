@@ -23,12 +23,17 @@ class IdentityProvidersTest extends FunctionalTestCase {
 
 	/** @test */
 	public function shouldAuthenticateOAuthUsersViaAccessToken() {
-		$this->dispatch('/safe-route', 'GET', [
-			'access_token' => $this->requestAccessToken([
-				'username' => 'testUser',
-				'password' => 'testPass',
-			])
+		$accessToken = $this->requestAccessToken([
+			'username' => 'testUser',
+			'password' => 'testPass',
 		]);
+		$this->resetResponseObject();
+
+		$this->dispatch('/', 'GET', [
+			'access_token' => $accessToken
+		]);
+		$this->assertResponseStatusCode(200);
+
 		$user = $this->getCurrentIdentity();
 
 		$this->assertInstanceOf('\Aeris\ZfAuthTest\Fixture\Entity\User', $user);
@@ -36,20 +41,21 @@ class IdentityProvidersTest extends FunctionalTestCase {
 	}
 
 	/** @test */
-	public function shouldAuthenticateAsAnonymousForInvalidAccessToken() {
-		$this->dispatch('/safe-route', 'GET', [
+	public function shouldReturnErrorForBadAccessToken() {
+		$this->dispatch('/', 'GET', [
 			'access_token' => 'not_a_valid_access_token',
 		]);
 
-		$this->assertInstanceOf('\Aeris\ZfAuth\Identity\AnonymousIdentity', $this->getCurrentIdentity());
+		$this->assertAuthenticationErrorResponse();
 	}
 
 	/** @test */
 	public function shouldAuthenticateOAuthClientUsersWithNoAccessToken() {
-		$this->dispatch('/safe-route', 'GET', [
+		$this->dispatch('/', 'GET', [
 			'client_id' => 'testClient',
 			'client_secret' => 'testSecret'
 		]);
+		$this->assertResponseStatusCode(200);
 
 		/** @var OAuthClientIdentity $identity */
 		$identity = $this->getCurrentIdentity();
@@ -58,18 +64,19 @@ class IdentityProvidersTest extends FunctionalTestCase {
 	}
 
 	/** @test */
-	public function shouldAuthenticateAsAnonymousForInvalidClientKeys() {
-		$this->dispatch('/safe-route', 'GET', [
+	public function shouldReturnErrorForBadClientClients() {
+		$this->dispatch('/', 'GET', [
 			'client_id' => 'notAClientId',
 			'client_secret' => 'notAClientSecret'
 		]);
 
-		$this->assertInstanceOf('\Aeris\ZfAuth\Identity\AnonymousIdentity', $this->getCurrentIdentity());
+		$this->assertAuthenticationErrorResponse();
 	}
 
 	/** @test */
 	public function shouldAuthenticateAsAnonymousForNoClientKeysOrToken() {
-		$this->dispatch('/safe-route', 'GET');
+		$this->dispatch('/', 'GET');
+		$this->assertResponseStatusCode(200);
 
 		$this->assertInstanceOf('\Aeris\ZfAuth\Identity\AnonymousIdentity', $this->getCurrentIdentity());
 	}
@@ -83,5 +90,12 @@ class IdentityProvidersTest extends FunctionalTestCase {
 		return $user;
 	}
 
+	protected function assertAuthenticationErrorResponse() {
+		// Note, this only happens as a JSON response,
+		// because we've configured ZendRestModule to
+		// handle \Aeris\ZfAuth\Exception\AuthenticationException's
+		$this->assertResponseStatusCode(401);
+		$this->assertJsonErrorCodeEquals('authentication_error');
+	}
 
 }

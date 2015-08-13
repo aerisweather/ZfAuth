@@ -13,6 +13,12 @@ return [
 				'details'         => 'The requested endpoint or action is invalid and not supported.',
 			],
 			[
+				'error' => '\Aeris\ZfAuth\Exception\AuthenticationException',
+				'http_code' => 401,
+				'application_code' => 'authentication_error',
+				'details' => 'The request failed to be authenticated. Check your access keys, and try again.'
+			],
+			[
 				'error' => '\Exception',
 				'http_code' => 500,
 				'application_code' => 'invalid_request',
