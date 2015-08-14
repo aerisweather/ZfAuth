@@ -18,19 +18,32 @@ class Module {
 	public function onBootstrap(MvcEvent $event) {
 		$eventManager = $event->getApplication()
 			->getEventManager();
-		$eventManager->attach(MvcEvent::EVENT_ROUTE, function(MvcEvent $event) use ($eventManager) {
-			/** @var IdentityProviderInterface $identityProvider */
-			$identityProvider = $event->getApplication()
-				->getServiceManager()
-				->get('Aeris\ZfAuth\IdentityProvider');
-
-
-			if (!$identityProvider->canAuthenticate() || $identityProvider->getIdentity() === null) {
-				$event->setError(self::AUTHENTICATION_ERROR);
-				$event->setParam('exception', new AuthenticationException());
-				$eventManager->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
-			}
-		}, 500);
+		$eventManager->attach(MvcEvent::EVENT_ROUTE, [$this, 'checkAuthenticated'], 500);
 	}
+
+	public function checkAuthenticated(MvcEvent $event) {
+		/** @var IdentityProviderInterface $identityProvider */
+		$identityProvider = $event->getApplication()
+			->getServiceManager()
+			->get('Aeris\ZfAuth\IdentityProvider');
+
+
+		if (!$identityProvider->canAuthenticate() || $identityProvider->getIdentity() === null) {
+			$this->terminateEvent($event, self::AUTHENTICATION_ERROR, new AuthenticationException());
+		}
+	}
+
+	protected function terminateEvent(MvcEvent $event, $error, \Exception $exception) {
+		$eventManager = $event->getApplication()
+			->getEventManager();
+
+		$event->setError($error);
+		$event->setParam('exception', $exception);
+
+		$event->stopPropagation(true);
+
+		$eventManager->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
+	}
+
 
 }
