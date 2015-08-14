@@ -10,7 +10,8 @@ class Module {
 		return [
 			'controllers' => [
 				'invokables' => [
-					'ZfAuthTest\Controller\IndexController' => '\Aeris\ZfAuthTest\Fixture\Controller\IndexController'
+					'Aeris\ZfAuthTest\Controller\IndexController' => '\Aeris\ZfAuthTest\Fixture\Controller\IndexController',
+					'Aeris\ZfAuthTest\Controller\AdminController' => '\Aeris\ZfAuthTest\Fixture\Controller\AdminController',
 				],
 			],
 
@@ -21,8 +22,27 @@ class Module {
 						'options' => [
 							'route' => '/',
 							'defaults' => [
-								'controller' => 'ZfAuthTest\Controller\IndexController',
+								'controller' => 'Aeris\ZfAuthTest\Controller\IndexController',
 								'action' => 'index'
+							]
+						]
+					],
+					'admin-rest' => [
+						'type' => 'Aeris\ZendRestModule\Mvc\Router\Http\RestSegment',
+						'options' => [
+							'route' => '/admin[/:id]',
+							'defaults' => [
+								'controller' => 'Aeris\ZfAuthTest\Controller\AdminController',
+							]
+						]
+					],
+					'admin-foo-action' => [
+						'type' => 'Zend\Mvc\Router\Http\Segment',
+						'options' => [
+							'route' => '/admin/fooAction',
+							'defaults' => [
+								'controller' => 'Aeris\ZfAuthTest\Controller\AdminController',
+								'action' => 'foo'
 							]
 						]
 					]

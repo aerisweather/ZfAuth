@@ -19,6 +19,12 @@ return [
 				'details' => 'The request failed to be authenticated. Check your access keys, and try again.'
 			],
 			[
+				'error' => '\Aeris\ZfAuth\Exception\AuthorizationExceptionInterface',
+				'http_code' => 403,
+				'application_code'=> 'authorization_error',
+				'details' => 'The user is not authorized to access this resource.'
+			],
+			[
 				'error' => '\Exception',
 				'http_code' => 500,
 				'application_code' => 'invalid_request',
