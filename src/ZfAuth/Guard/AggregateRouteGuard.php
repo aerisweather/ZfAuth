@@ -11,7 +11,7 @@ use Aeris\Fn;
 class AggregateRouteGuard implements GuardInterface {
 
 	/** @var ServiceLocatorInterface */
-	protected $routeGuardManager;
+	protected $guardManager;
 
 	/** @var GuardInterface[] */
 	protected $guards = [];
@@ -27,7 +27,7 @@ class AggregateRouteGuard implements GuardInterface {
 
 		foreach ($rules as $guardName => $guardRules) {
 			/** @var GuardInterface $guard */
-			$guard = $this->routeGuardManager->get($guardName);
+			$guard = $this->guardManager->get($guardName);
 			$guard->setRules($guardRules);
 
 			$this->guards[] = $guard;
@@ -47,9 +47,9 @@ class AggregateRouteGuard implements GuardInterface {
 	}
 
 	/**
-	 * @param ServiceLocatorInterface $routeGuardManager
+	 * @param ServiceLocatorInterface $guardManager
 	 */
-	public function setRouteGuardManager(ServiceLocatorInterface $routeGuardManager) {
-		$this->routeGuardManager = $routeGuardManager;
+	public function setGuardManager(ServiceLocatorInterface $guardManager) {
+		$this->guardManager = $guardManager;
 	}
 }

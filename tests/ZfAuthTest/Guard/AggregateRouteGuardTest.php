@@ -32,7 +32,7 @@ class AggregateRouteGuardTest extends \PHPUnit_Framework_TestCase {
 	/** @test */
 	public function isGranted_shouldSetRulesOnGuards() {
 		$guard = new AggregateRouteGuard();
-		$guard->setRouteGuardManager($this->routeGuardManager);
+		$guard->setGuardManager($this->routeGuardManager);
 		$guard->setRules([
 			'AlwaysGrantedGuard' => [
 				'foo' => 'bar'
@@ -58,7 +58,7 @@ class AggregateRouteGuardTest extends \PHPUnit_Framework_TestCase {
 	/** @test */
 	public function isGranted_shouldPassRouteMatchToComponentGuards() {
 		$guard = new AggregateRouteGuard();
-		$guard->setRouteGuardManager($this->routeGuardManager);
+		$guard->setGuardManager($this->routeGuardManager);
 		$guard->setRules([
 			'AlwaysGrantedGuard' => [],
 			'NeverGrantedGuard' => []
@@ -86,7 +86,7 @@ class AggregateRouteGuardTest extends \PHPUnit_Framework_TestCase {
 	/** @test */
 	public function isGranted_shouldFailIfAnyComponentGuardFails() {
 		$guard = new AggregateRouteGuard();
-		$guard->setRouteGuardManager($this->routeGuardManager);
+		$guard->setGuardManager($this->routeGuardManager);
 		$guard->setRules([
 			'AlwaysGrantedGuard' => [],
 			'NeverGrantedGuard' => []
@@ -98,7 +98,7 @@ class AggregateRouteGuardTest extends \PHPUnit_Framework_TestCase {
 	/** @test */
 	public function isGranted_shouldPassIfAllComponentGuardPasses() {
 		$guard = new AggregateRouteGuard();
-		$guard->setRouteGuardManager($this->routeGuardManager);
+		$guard->setGuardManager($this->routeGuardManager);
 		$guard->setRules([
 			'AlwaysGrantedGuard' => [],
 		]);
@@ -109,7 +109,7 @@ class AggregateRouteGuardTest extends \PHPUnit_Framework_TestCase {
 	/** @test */
 	public function isGranted_shouldFailIfNoRulesAreSet() {
 		$guard = new AggregateRouteGuard();
-		$guard->setRouteGuardManager($this->routeGuardManager);
+		$guard->setGuardManager($this->routeGuardManager);
 
 		$this->assertFalse($guard->isGranted(new RouteMatch([])));
 	}
