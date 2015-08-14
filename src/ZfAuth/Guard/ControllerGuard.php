@@ -64,9 +64,9 @@ class ControllerGuard implements GuardInterface {
 		$action = strtolower($routeMatch->getParam('action'));
 		$restAction = strtolower($routeMatch->getParam('restAction'));
 
-		$rolesForAction = @$this->rules[$controller] ?: [];
-		$roles = @$rolesForAction[$action] ?: @$rolesForAction[$restAction];
-		$roles = $roles ?: @$rolesForAction['*'];
+		$rolesByAction = @$this->rules[$controller] ?: [];
+		$roles = @$rolesByAction[$action] ?: @$rolesByAction[$restAction];
+		$roles = $roles ?: @$rolesByAction['*'];
 
 		return $roles;
 	}
