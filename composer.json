@@ -14,7 +14,7 @@
         "zendframework/zend-authentication": ">2.3",
         "doctrine/orm": "^2.5",
         "aeris/fn": "^1.2.0",
-        "aeris/zf-di-config": "~1.1.0",
+        "aeris/zf-di-config": "^1.2.0",
         "aeris/zend-rest-module": "~1.1.3",
         "doctrine/doctrine-orm-module": "0.8.*",
         "zfcampus/zf-oauth2": "~1.3.1",

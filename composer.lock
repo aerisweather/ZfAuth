@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "916bd3828ab49cacb84025ba32106225",
+    "hash": "1cfa212063a1b77b6866cbc085120d4d",
     "packages": [
         {
             "name": "aeris/fn",
@@ -144,16 +144,16 @@
         },
         {
             "name": "aeris/zf-di-config",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aerisweather/ZfDiConfig.git",
-                "reference": "c049c4068d8608337d13fe13fd42e664e8dd2865"
+                "reference": "bf8a56cc1403a11cec78c76c5e79fe7845c4ea92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aerisweather/ZfDiConfig/zipball/c049c4068d8608337d13fe13fd42e664e8dd2865",
-                "reference": "c049c4068d8608337d13fe13fd42e664e8dd2865",
+                "url": "https://api.github.com/repos/aerisweather/ZfDiConfig/zipball/bf8a56cc1403a11cec78c76c5e79fe7845c4ea92",
+                "reference": "bf8a56cc1403a11cec78c76c5e79fe7845c4ea92",
                 "shasum": ""
             },
             "require": {
@@ -183,7 +183,7 @@
                 "zend framework 2",
                 "zf2"
             ],
-            "time": "2015-08-06 16:57:36"
+            "time": "2015-08-14 20:39:49"
         },
         {
             "name": "bshaffer/oauth2-server-php",
