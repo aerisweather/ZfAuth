@@ -57,7 +57,83 @@ class ControllerGuardTest extends \PHPUnit_Framework_TestCase {
 			'controller' => 'AnotherController',
 			'restAction' => 'notAnAction',
 		])), 'Should not grant for non-configured controllers + actions');
+	}
 
+	/** @test */
+	public function shouldGrantToAnyRolesWithAsterisk() {
+		$guard = new ControllerGuard([
+			[
+				'controller' => 'TestController',
+				'actions' => ['foo', 'get'],
+				'roles' => ['*']
+			]
+		]);
+		$identityProvider = new IdentityProvider();
+		$identityProvider->setIdentityRoles(['whatever_user']);
+		$guard->setIdentityProvider($identityProvider);
+
+		$this->assertTrue($guard->isGranted(new RouteMatch([
+			'controller' => 'TestController',
+			'action' => 'foo',
+		])), 'Should grant for actions');
+
+		$this->assertTrue($guard->isGranted(new RouteMatch([
+			'controller' => 'TestController',
+			'restAction' => 'get',
+		])), 'Should grant for rest actions');
+	}
+
+	/** @test */
+	public function shouldGrantToAnyActionWithAsterisk() {
+		$guard = new ControllerGuard([
+			[
+				'controller' => 'TestController',
+				'actions' => ['*'],
+				'roles' => ['admin']
+			]
+		]);
+		$identityProvider = new IdentityProvider();
+		$identityProvider->setIdentityRoles(['admin']);
+		$guard->setIdentityProvider($identityProvider);
+
+		$this->assertTrue($guard->isGranted(new RouteMatch([
+			'controller' => 'TestController',
+			'action' => 'foo',
+		])), 'Should grant for actions');
+
+		$this->assertTrue($guard->isGranted(new RouteMatch([
+			'controller' => 'TestController',
+			'restAction' => 'get',
+		])), 'Should grant for rest actions');
+	}
+
+	/** @test */
+	public function shouldNotPrioritizeActionWildcards() {
+		$guard = new ControllerGuard([
+			[
+				'controller' => 'TestController',
+				'actions' => ['*'],
+				'roles' => ['*']
+			],
+			[
+				'controller' => 'TestController',
+				'actions' => ['secretAction'],
+				'roles' => ['admin']
+			],
+		]);
+		$identityProvider = new IdentityProvider();
+		$identityProvider->setIdentityRoles(['user']);
+		$guard->setIdentityProvider($identityProvider);
+
+		$this->assertTrue($guard->isGranted(new RouteMatch([
+			'controller' => 'TestController',
+			'action' => 'whatever'
+		])), 'Should grant wildcard-ed actions');
+
+		$this->assertFalse($guard->isGranted(new RouteMatch([
+			'controller' => 'TestController',
+			'action' => 'secretAction'
+		])), 'But should prioritize explicit rules');
 	}
 
 	/** @test */

@@ -47,6 +47,10 @@ class ControllerGuard implements GuardInterface {
 			return false;
 		}
 
+		if (in_array('*', $allowedRoles)) {
+			return true;
+		}
+
 		$matchingRoles = array_intersect($allowedRoles, $this->identityProvider->getIdentity()->getRoles());
 		if (count($matchingRoles)) {
 			return true;
@@ -60,7 +64,11 @@ class ControllerGuard implements GuardInterface {
 		$action = strtolower($routeMatch->getParam('action'));
 		$restAction = strtolower($routeMatch->getParam('restAction'));
 
-		return @$this->rules[$controller][$action] ?: @$this->rules[$controller][$restAction];
+		$rolesForAction = @$this->rules[$controller] ?: [];
+		$roles = @$rolesForAction[$action] ?: @$rolesForAction[$restAction];
+		$roles = $roles ?: @$rolesForAction['*'];
+
+		return $roles;
 	}
 
 	/**
