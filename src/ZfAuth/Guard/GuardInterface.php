@@ -9,7 +9,7 @@ interface GuardInterface {
 
 	public function __construct(array $rules = []);
 
-	public function setRules(array $rule);
+	public function setRules(array $rules);
 
 
 	/** @return boolean */
