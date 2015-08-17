@@ -18,7 +18,8 @@
         "aeris/zend-rest-module": "~1.1.3",
         "doctrine/doctrine-orm-module": "0.8.*",
         "zfcampus/zf-oauth2": "~1.3.1",
-        "symfony/security-core": "^2.7"
+        "symfony/security-core": "^2.7",
+        "aeris/spy": "^1.1"
     },
     "autoload": {
         "psr-4": {

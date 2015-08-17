@@ -7,7 +7,7 @@ namespace Aeris\ZfAuthTest\Voter;
 use Aeris\ZendRestModuleTest\RestTestModule\Model\Animal;
 use Aeris\ZfAuth\Identity\IdentityInterface;
 use Aeris\ZfAuth\Voter\ResourceLimitVoter;
-use Aeris\ZfAuthTest\Helper\Spy;
+use Aeris\Spy;
 use Mockery as M;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface as Voter;
