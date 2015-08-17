@@ -193,3 +193,163 @@ return [
   ]
 ];
 ```
+
+## Authorization
+
+ZfAuth provides two ways to restrict resource access to authorized identities:
+
+1. Route Guards
+2. Voters
+
+Route guards allow you to restrict access to a resource before a request has made it to a controller, using a simple rule set. Voters allow you to restrict access to a *specific resource*, using advanced logic.
+
+### Route Guards
+
+After a route has been matched to a controller, but before the controller action executes, ZfAuth will check your route guard rules, to see if the current identity passes each rule.
+
+#### Configuration
+
+Route guards are configured using the `zf_auth.guards` module option. Each key is the name of a guard service, and the value is an array of rules to apply to the guard.
+
+```php
+return [
+	'zf_auth' => [
+		'guards' => [
+			'Aeris\ZfAuth\Guard\ControllerGuard' => [
+				[
+					'controller' => 'Aeris\ZfAuthTest\Controller\IndexController',
+					'actions' => ['*'],
+					'roles' => ['*']
+				],
+				[
+					'controller' => 'Aeris\ZfAuthTest\Controller\AdminController',
+					'actions' => ['get', 'getList', 'update', 'foo' ],
+					'roles' => ['admin']
+				],
+			],
+		]
+	]
+]
+```
+
+This example config would let any user access any action in the `IndexController`, but only let users with an `admin` role access `get`, `getList`, `update`, and `fooAction` methods on the `AdminController`. 
+
+Note that any controller/action which is not configured will **be restricted by default.**
+
+#### `ControllerGuard`
+
+The `Aeris\ZfAuth\Guard\ControllerGuard` restricts access to controller actions based on the requesting user's role. 
+
+The options are:
+
+* `'controller'` The controller for which this rule applies (`ControllerManager` service name)
+* `'actions'` The actions for which this rule applies. Use `'*'` to apply this rule to all actions of the controller. Note that to use `REST` actions, you must be using `Aeris\ZendRestModule\Mvc\Router\Http\RestSegment` route types (from `Aeris\ZendRestModule`)
+* `'roles'` The roles which are allowed access to this controller action. Use `'*'` to allow any role.
+
+#### Custom Guards
+
+You can create a custom guard, which implements the `GuardInterface`:
+
+```php
+namespace Aeris\ZfAuth\Guard;
+
+use Zend\Mvc\Router\RouteMatch;
+
+interface GuardInterface {
+
+	public function __construct(array $rules = []);
+
+	public function setRules(array $rules);
+
+	/** @return boolean */
+	public function isGranted(RouteMatch $event);
+
+}
+```
+
+The `isGranted` method should return true if the current identity is allowed to access the resource.
+
+To demonstrate, let's make a guard that restricts users based on their username. Our final configuration will look like this:
+
+
+```php
+[
+	'zf_auth' => [
+		'guards' => [
+			'MyApp\Guard\UsernameGuard' => [
+				// Rules to pass to our guard
+				[
+					'controller' => 'MyApp\Controller\AdminController',
+					'usernames' => ['alice', 'bob']
+				],
+				[
+					'controller' => 'MyApp\Controller\IndexController',
+					'usernames' => ['*']
+				],
+			]
+		]
+	]
+]
+```
+
+Our `UsernameGuard` class will check the current controller and user identity against the rules provided in the configuration:
+
+```php
+class UsernameGuard implements GuardInterface {
+
+	/** @var array  */
+	protected $rules;
+
+	/** @var IdentityProviderInterface */
+	protected $identityProvider;
+
+	public function __construct(array $rules = []) {
+		$this->setRules($rules);
+	}
+
+	public function setRules(array $rules) {
+		$this->rules = $rules;
+	}
+
+	/** @return boolean */
+	public function isGranted(RouteMatch $routeMatch) {
+		$controller = $routeMatch->getParam('controller');
+
+		// Find usernames allowed for this controller
+		$allowedUsernames = array_reduce($this->rules, function($allowed, $rule) use ($controller) {
+			$isMatch = $rule['controller'] === $controller;
+			return array_merge($allowed, $isMatch ? $rule['usernames'] : []);
+		}, []);
+
+		$username = $this->identityProvider->getIdentity()->getUsername();
+		return in_array('*', $allowedUsernames) || in_array($username, $allowedUsernames);
+	}
+
+	public function setIdentityProvider(IdentityProviderInterface $identityProvider) {
+		$this->identityProvider = $identityProvider;
+	}
+}
+```
+
+The last step is to register your guard with the ZfAuth guard manager:
+
+```php
+[
+	'guard_manager' => [
+		// Using Aeris\ZfDiConfig, because I'm fancy
+		// but you can use service factories if you want to be lame
+		'di' => [
+			'MyApp\Guard\UsernameGuard' => [
+				'class' => '\MyApp\Guard\UsernameGuard',
+				'setters' => [
+					'identityProvider' => '@Aeris\ZfAuth\IdentityProvider'
+				]
+			]
+		]
+	]
+]
+```
+
+## Voters
+
+Coming soon.
