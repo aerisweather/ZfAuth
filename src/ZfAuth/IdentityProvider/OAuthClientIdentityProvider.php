@@ -30,7 +30,7 @@ class OAuthClientIdentityProvider implements IdentityProviderInterface {
 	 */
 	public function canAuthenticate() {
 		return Fn\all(['client_id', 'client_secret'], function($k) {
-			return $this->request->query($k) !== null;
+			return $this->param($k) !== null;
 		});
 	}
 
@@ -50,8 +50,8 @@ class OAuthClientIdentityProvider implements IdentityProviderInterface {
 		/** @var \OAuth2\Storage\Pdo $clientStorage */
 		$clientStorage = $this->oauthServer->getStorage('client');
 		$isAuthorizedRequest = $clientStorage->checkClientCredentials(
-			$this->request->query('client_id'),
-			$this->request->query('client_secret')
+			$this->param('client_id'),
+			$this->param('client_secret')
 		);
 
 		if (!$isAuthorizedRequest) {
@@ -59,8 +59,12 @@ class OAuthClientIdentityProvider implements IdentityProviderInterface {
 		}
 
 		$clientIdentity = new OAuthClientIdentity();
-		$clientIdentity->setClientId($this->request->query('client_id'));
+		$clientIdentity->setClientId($this->param('client_id'));
 		return $clientIdentity;
+	}
+
+	protected function param($name) {
+		return $this->request->request($name, $this->request->query($name));
 	}
 
 	/**
