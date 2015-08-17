@@ -14,7 +14,15 @@ return [
 				]
 			]
 		],
-		'guards' => []
+		'guards' => [
+			'Aeris\ZfAuth\Guard\ControllerGuard' => [
+				[
+					'controller' => 'ZF\OAuth2\Controller\Auth',
+					'actions' => 'token',
+					'roles' => ['oauth_client']
+				]
+			]
+		],
 	],
 	'service_manager' => [
 		'factories' => [
