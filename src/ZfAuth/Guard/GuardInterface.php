@@ -13,6 +13,6 @@ interface GuardInterface {
 
 
 	/** @return boolean */
-	public function isGranted(RouteMatch $event);
+	public function isGranted(RouteMatch $routeMatch);
 
 }
