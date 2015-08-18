@@ -37,7 +37,10 @@ class OAuthUserIdentityProvider implements IdentityProviderInterface {
 		$identity = $this->identityAdapter
 			->findByUsername($accessTokenData['user_id']);
 
-		if (!($identity instanceof IdentityInterface)) {
+		if ($identity === null) {
+			return null;
+		}
+		else if (!($identity instanceof IdentityInterface)) {
 			throw new \UnexpectedValueException('Expected IdentityAdapter to return an IdentityInterface.');
 		}
 
