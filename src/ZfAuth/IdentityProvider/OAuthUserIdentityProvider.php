@@ -6,16 +6,8 @@ namespace Aeris\ZfAuth\IdentityProvider;
 
 use Aeris\ZfAuth\Identity\IdentityInterface;
 use Aeris\ZfAuth\Repository\IdentityRepositoryInterface;
-use OAuth2\Request as OAuth2Request;
-use OAuth2\Server;
 
-class OAuthUserIdentityProvider implements IdentityProviderInterface {
-
-	/** @var Server */
-	protected $oauthServer;
-
-	/** @var OAuth2Request */
-	protected $request;
+class OAuthUserIdentityProvider extends AbstractOAuthIdentityProvider {
 
 	/** @var IdentityRepositoryInterface */
 	protected $identityAdapter;
@@ -45,22 +37,6 @@ class OAuthUserIdentityProvider implements IdentityProviderInterface {
 		}
 
 		return $this->identity = $identity;
-	}
-
-	/**
-	 * @param Server $oauthServer
-	 * @return $this
-	 */
-	public function setOAuthServer(Server $oauthServer) {
-		$this->oauthServer = $oauthServer;
-	}
-
-	/**
-	 * @param OAuth2Request $request
-	 * @return $this
-	 */
-	public function setRequest(OAuth2Request $request) {
-		$this->request = $request;
 	}
 
 	/** @param IdentityRepositoryInterface $identityAdapter */

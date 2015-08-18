@@ -4,20 +4,14 @@
 namespace Aeris\ZfAuth\IdentityProvider;
 
 use Aeris\ZfAuth\Identity\OAuthClientIdentity;
-use OAuth2\Server;
-use OAuth2\Request as OAuth2Request;
 use Aeris\Fn;
 
 /**
  * Provides a user acting on behalf of an oAuth client.
  * Does not require an access_token (only client_id/client_secret)
  */
-class OAuthClientIdentityProvider implements IdentityProviderInterface {
-	/** @var OAuth2Request */
-	protected $request;
+class OAuthClientIdentityProvider extends AbstractOAuthIdentityProvider {
 
-	/** @var Server */
-	protected $oauthServer;
 
 	/**
 	 * Can this provider authenticate the current request?
@@ -61,23 +55,5 @@ class OAuthClientIdentityProvider implements IdentityProviderInterface {
 		$clientIdentity = new OAuthClientIdentity();
 		$clientIdentity->setClientId($this->param('client_id'));
 		return $clientIdentity;
-	}
-
-	protected function param($name) {
-		return $this->request->request($name, $this->request->query($name));
-	}
-
-	/**
-	 * @param OAuth2Request $request
-	 */
-	public function setRequest(OAuth2Request $request) {
-		$this->request = $request;
-	}
-
-	/**
-	 * @param Server $oauthServer
-	 */
-	public function setOauthServer(Server $oauthServer) {
-		$this->oauthServer = $oauthServer;
 	}
 }
