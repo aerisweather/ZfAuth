@@ -28,11 +28,16 @@ return [
 		'factories' => [
 			'OAuth2\Request' => '\Aeris\ZfAuth\Factory\OAuth2RequestFactory',
 			'OAuth2\Server' => '\Aeris\ZfAuth\Factory\OAuth2ServerFactory',
-			'Aeris\ZfAuth\PluginManager\GuardManager' => '\Aeris\ZfAuth\Factory\GuardManagerFactory',
 		],
 		'di' => array_replace(
 			include __DIR__ . '/identity-providers.config.php',
 			[
+				'Aeris\ZfAuth\PluginManager\GuardManager' => [
+					'$serviceManager' => [
+						'service_type' => '\Aeris\ZfAuth\Guard\GuardInterface',
+						'config' => '%zf_auth.guard_manager'
+					]
+				],
 				'Aeris\ZfAuth\RouteGuard' => [
 					'class' => '\Aeris\ZfAuth\Guard\AggregateRouteGuard',
 					'setters' => [
