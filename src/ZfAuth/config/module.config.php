@@ -22,12 +22,18 @@ return [
 					'roles' => ['oauth_client']
 				]
 			]
-		],
+		]
 	],
 	'service_manager' => [
 		'factories' => [
 			'OAuth2\Request' => '\Aeris\ZfAuth\Factory\OAuth2RequestFactory',
 			'OAuth2\Server' => '\Aeris\ZfAuth\Factory\OAuth2ServerFactory',
+			// Do not use ZfDiConfig here
+			// --> if a consuming application tries to
+			//		 override the IdentityProvider,
+			//		 ZF2 will instead merge the two configs together,
+			// 		 resulting in each component provider being set twice.
+			'Aeris\ZfAuth\IdentityProvider' => '\Aeris\ZfAuth\Factory\IdentityProviderFactory',
 		],
 		'di' => array_replace(
 			include __DIR__ . '/identity-providers.config.php',

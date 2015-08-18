@@ -23,14 +23,4 @@ return [
 		]
 	],
 	'Aeris\ZfAuth\IdentityProvider\AnonymousIdentityProvider' => '\Aeris\ZfAuth\IdentityProvider\AnonymousIdentityProvider',
-	'Aeris\ZfAuth\IdentityProvider' => [
-		'class' => 'Aeris\ZfAuth\IdentityProvider\ChainedIdentityProvider',
-		'setters' => [
-			'providers' => [
-				'@Aeris\ZfAuth\IdentityProvider\OAuthUserIdentityProvider',
-				'@Aeris\ZfAuth\IdentityProvider\OAuthClientIdentityProvider',
-				'@Aeris\ZfAuth\IdentityProvider\AnonymousIdentityProvider'
-			]
-		]
-	]
 ];

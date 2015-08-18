@@ -16,6 +16,8 @@ class RouteGuardsTest extends FunctionalTestCase {
 		parent::setUp();
 		$this->identityProvider = new IdentityProvider();
 		$this->useServiceMock('Aeris\ZfAuth\IdentityProvider', $this->identityProvider);
+
+		$this->identityProvider->setCanAuthenticate(true);
 	}
 
 	/** @test */

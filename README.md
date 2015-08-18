@@ -174,9 +174,10 @@ return [
   'service_manager' => [
 	  // Aeris\ZfDiConfig ftw
 	  'di' => [
-		  // Wrap in ChainedIdentityProvider, so we still
-		  // have access to other authenticators
-		  'IdentityProvider' => [
+	  	// Override default identity provider
+		  'Aeris\ZfAuth\IdentityProvider' => [
+				// Wrap in ChainedIdentityProvider, so we still
+				// have access to other authenticators
 			  'class' => 'Aeris\ZfAuth\IdentityProvider\ChainedIdentityProvider',
 			  'setters' => [
 				  'providers' => [

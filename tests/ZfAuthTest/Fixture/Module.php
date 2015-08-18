@@ -47,6 +47,23 @@ class Module {
 						]
 					]
 				]
+			],
+
+			'service_manager' => [
+				'di' => [
+					'Aeris\ZfAuthTest\IdentityProvider\TestIdentityProvider' => '\Aeris\ZfAuthTest\Fixture\IdentityProvider\IdentityProvider',
+					'Aeris\ZfAuth\IdentityProvider' => [
+						'class' => 'Aeris\ZfAuth\IdentityProvider\ChainedIdentityProvider',
+						'setters' => [
+							'providers' => [
+								'@Aeris\ZfAuthTest\IdentityProvider\TestIdentityProvider',
+								'@Aeris\ZfAuth\IdentityProvider\OAuthUserIdentityProvider',
+								'@Aeris\ZfAuth\IdentityProvider\OAuthClientIdentityProvider',
+								'@Aeris\ZfAuth\IdentityProvider\AnonymousIdentityProvider'
+							]
+						]
+					]
+				]
 			]
 		];
 	}

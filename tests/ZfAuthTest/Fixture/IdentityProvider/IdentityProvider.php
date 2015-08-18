@@ -13,7 +13,7 @@ class IdentityProvider implements IdentityProviderInterface {
 	/** @var IdentityInterface */
 	public $identity;
 
-	public $_canAuthenticate = true;
+	public $_canAuthenticate = false;
 
 	public function canAuthenticate() {
 		return $this->_canAuthenticate;
