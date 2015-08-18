@@ -46,6 +46,14 @@ class OAuthUserIdentityProviderTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue($this->identityProvider->canAuthenticate());
 	}
 
+
+	/** @test */
+	public function canAuthenticate_shouldReturnTrueIfTheBodyContainsAnAccessToken() {
+		$this->oauthRequest->request['access_token'] = 'at123';
+
+		$this->assertTrue($this->identityProvider->canAuthenticate());
+	}
+
 	/** @test */
 	public function canAuthenticate_shouldReturnFalseIfTheQueryDoesNotContainAnAccessToken() {
 		$this->oauthRequest->query['access_token'] = null;

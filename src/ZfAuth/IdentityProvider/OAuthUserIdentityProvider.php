@@ -13,12 +13,12 @@ class OAuthUserIdentityProvider extends AbstractOAuthIdentityProvider {
 	protected $identityAdapter;
 
 	public function canAuthenticate() {
-		return $this->request->query('access_token') !== null;
+		return $this->param('access_token') !== null;
 	}
 
 	/** @return IdentityInterface */
 	public function getIdentity() {
-		$accessToken = $this->request->query('access_token');
+		$accessToken = $this->param('access_token');
 
 		if ($accessToken === null) {
 			return null;
