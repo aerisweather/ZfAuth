@@ -4,14 +4,16 @@
 namespace Aeris\ZfAuthTest\IdentityProvider;
 
 use Aeris\ZfAuth\IdentityProvider\OAuthUserIdentityProvider;
+use Doctrine\ORM\EntityRepository;
 use \Mockery as M;
 use OAuth2\Request;
+use OAuth2\Server;
 
 
 class OAuthUserIdentityProviderTest extends \PHPUnit_Framework_TestCase {
-	/** @var M\Mock; */
+	/** @var M\Mock|Server */
 	protected $oauthServer;
-	/** @var M\Mock */
+	/** @var M\Mock|EntityRepository */
 	protected $identityRepository;
 	/** @var Request */
 	protected $oauthRequest;
