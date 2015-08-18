@@ -24,6 +24,11 @@ return [
 			]
 		]
 	],
+	'controllers' => [
+		'initializers' => [
+			'\Aeris\ZfAuth\Initializer\AuthServiceAwareInitializer',
+		],
+	],
 	'service_manager' => [
 		'factories' => [
 			'OAuth2\Request' => '\Aeris\ZfAuth\Factory\OAuth2RequestFactory',
@@ -35,9 +40,18 @@ return [
 			// 		 resulting in each component provider being set twice.
 			'Aeris\ZfAuth\IdentityProvider' => '\Aeris\ZfAuth\Factory\IdentityProviderFactory',
 		],
+		'initializers' => [
+			'\Aeris\ZfAuth\Initializer\AuthServiceAwareInitializer',
+		],
 		'di' => array_replace(
 			include __DIR__ . '/identity-providers.config.php',
 			[
+				'Aeris\ZfAuth\Service\AuthService' => [
+					'class' => '\Aeris\ZfAuth\Service\AuthService',
+					'setters' => [
+						'identityProvider' => '@Aeris\ZfAuth\IdentityProvider',
+					],
+				],
 				'Aeris\ZfAuth\PluginManager\GuardManager' => [
 					'$serviceManager' => [
 						'service_type' => '\Aeris\ZfAuth\Guard\GuardInterface',
