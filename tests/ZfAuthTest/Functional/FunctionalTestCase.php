@@ -3,6 +3,7 @@
 namespace Aeris\ZfAuthTest\Functional;
 
 use Aeris\ZendRestModuleTest\AbstractTestCase;
+use Aeris\ZfAuthTest\Fixture\ModuleConfig;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\Alice;
 
@@ -14,8 +15,20 @@ class FunctionalTestCase extends AbstractTestCase {
 	}
 
 	protected function setUp() {
+		ModuleConfig::mergeConfig($this->getTestModuleConfig());
+
 		parent::setUp();
 		$this->purgeDb();
+	}
+
+	protected function tearDown() {
+		parent::tearDown();
+
+		ModuleConfig::resetConfig();
+	}
+
+	protected function getTestModuleConfig() {
+		return [];
 	}
 
 	protected function requestAccessToken(array $requestParams = []) {
