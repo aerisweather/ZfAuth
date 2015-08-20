@@ -353,4 +353,159 @@ The last step is to register your guard with the ZfAuth guard manager:
 
 ## Voters
 
-Coming soon.
+Voters allow you to restrict access to specific resources. 
+
+### Using Voters
+
+The primary way to use voters is via the `AuthService`. Here's an example of how you might use the `AuthService` in a controller:
+
+```php
+use Aeris\ZfAuth\Service\AuthServiceAwareInterface;
+use Zend\Mvc\Controller\AbstractRestfulController;
+
+class AnimalRestController extends AbstractRestfulController implements AuthServiceAwareInterface {
+	use \Aeris\ZfAuth\Service\AuthServiceAwareTrait;
+
+	public function create($data) {
+		$animal = new Animal($data);
+
+		// Check if the current identity is allowed to create this animal
+		if (!$this->authService->isGranted('create', $animal)) {
+			throw new AuthorizationException('Tsk tsk tsk, you cannot create an animal, you!');
+		}
+
+		$this->persist($animal);
+		return $animal;
+	}
+}
+```
+
+Notice that this controller implements `Aeris\ZfAuth\Service\AuthServiceAwareInterface` -- this will cause the controller to be automatically injected with the `AuthService\Aeris\ZfAuth\Service\AuthService` service by the ZF2 `ControllerManager`.
+
+You can also grab the AuthService from the application service locator: `$serviceLocator->get('AuthService\Aeris\ZfAuth\Service\AuthService')`
+
+### How Voters Work
+
+A Voter is a class implementing `\Symfony\Component\Security\Core\Authorization\Voter\VoterInterface`. The `Voter::vote()` method returns either:
+
+* `VoterInterface::ACESS_GRANTED`
+* `VoterInterface::ACESS_DENIED`
+* `VoterInterface::ACCESS_ABSTAIN`
+
+When you call `AuthService::isGranted($action, $resource)`, the auth service runs through each registered voter, and collects votes. If any voter returns `ACCESS_DENIED`, then `isGranted()` will return false. 
+
+### Implementing Custom Voters
+
+Let's work off of the `AnimalRestController::create()` example from above. And let's say Mr. Boss Man gave us two rules that we must enforce:
+
+1. Only logged in OAuth users may create animals
+2. If you want to create a monkey, you must first *be* a monkey.
+
+For these two rules, we will create two different voters:
+
+```php
+class OnlyUsersCanCreateAnimalsVoter implements VoterInterface {
+
+	public function vote(TokenInterface $token, $resource, array $actions) {
+		// First, we need to decide whether we care about this resource/action
+		$doWeCare = $this->supportsClass(get_class($resource)) &&
+			Aeris\Fn\any($actions, [$this, 'supportsAttribute']);
+
+		if (!$doWeCare) {
+			// Returning ACCESS_ABSTAIN tells our AuthService to ignore
+			// the results of this voter
+			return self::ACCESS_ABSTAIN;
+		}
+
+		// We can get the current Identity from the $token argument
+		$currentIdentity = $token->getUser();
+
+		$isLoggedInUser = !($currentIdentity instanceof \Aeris\ZfAuth\Identity\AnonymousIdentity);
+
+		// Do not allow anonymous requests to create animals
+		return $isLoggedInUser ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
+	}
+
+	public function supportsAttribute($action) {
+		// This voter only cares about `create` actions (aka "attributes")
+		return $action === 'create';
+	}
+
+	public function supportsClass($class) {
+		// This voter only cares about `Animal` objects
+		return $class === 'MyApp\Model\Animal' || is_a($class, 'MyApp\Model\Animal');
+	}
+}
+
+class OnlyMonkeysCanCreateMonkeysVoter implements VoterInterface {
+
+	public function vote(TokenInterface $token, $resource, array $actions) {
+		// Again, we need to decide whether we care about this resource/action
+		$doWeCare = $this->supportsClass(get_class($resource)) &&
+			Aeris\Fn\any($actions, [$this, 'supportsAttribute']) &&
+			// And in this case, we only care about animals which are also monkeys
+			$resource->getType() === 'monkey';
+
+		if (!$doWeCare) {
+			// Returning ACCESS_ABSTAIN tells our AuthService to ignore
+			// the results of this voter
+			return self::ACCESS_ABSTAIN;
+		}
+
+		// The $token is simply a Symfony interface which wraps a ZfAuth IdentityInterface object
+		$currentIdentity = $token->getUser();
+
+		$isCurrentIdentityAMonkey = $currentIdentity instanceof Animal && $currentIdentity->getType() === 'monkey';
+
+		return $isCurrentIdentityAMonkey ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
+	}
+
+	public function supportsAttribute($action) {
+		// This voter only cares about `create` attribues (aka "actions")
+		return $action === 'create';
+	}
+
+	public function supportsClass($class) {
+		// This voter only cares about `Animal` objects
+		return $class === 'MyApp\Model\Animal' || is_a($class, 'MyApp\Model\Animal');
+	}
+}
+```
+
+Finally, we need to register these voters, using the `zf_auth.voter_manager` config:
+
+```php
+[
+	'voter_manager' => [
+		'invokables' => [
+			'OnlyUsersCanCreateAnimalsVoter' => '\MyApp\Voter\OnlyUsersCanCreateAnimalsVoter',
+			'OnlyMonkeysCanCreateMonkeysVoter' => '\MyApp\Voter\OnlyMonkeysCanCreateMonkeysVoter'
+		]
+	]
+];
+```
+
+
+### Voter Configuration Reference
+
+```php
+[
+	'zf_auth' => [
+		// Register voters here
+		'voter_manager' => [
+			// Accepts same config as `service_manager`
+			'di' => [
+				// Also accepts Aeris\ZfDiConfig
+			]
+		],
+		'voter_options' => [
+			// `strategy` can be one of:
+			// - 'affirmative': grant access as soon as any voter returns ACCESS_GRANTED
+			// - 'consensus': grant access if there are more voters granting access than there are denying
+			// - 'unanimous' (default): only grant access if none of the voters has denied access
+			'strategy' => 'unanimous',
+			'allow_if_all_abstain' => true,
+		]
+	]
+]
+```
