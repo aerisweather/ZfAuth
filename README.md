@@ -2,6 +2,32 @@
 
 Authentication/Authorization components for Zend Framework 2.
 
+
+
+<!-- toc -->
+
+* [Install](#install)
+  * [Configuration Reference](#configuration-reference)
+  * [OAuth2 Database Setup](#oauth2-database-setup)
+* [Authentication](#authentication)
+  * [Handling invalid credentials](#handling-invalid-credentials)
+  * [Identity Providers](#identity-providers)
+    * [Usage Example](#usage-example)
+    * [Custom Identity Providers](#custom-identity-providers)
+* [Authorization](#authorization)
+  * [Route Guards](#route-guards)
+    * [Configuration](#configuration)
+    * [`ControllerGuard`](#controllerguard)
+    * [Custom Guards](#custom-guards)
+* [Voters](#voters)
+  * [Using Voters](#using-voters)
+  * [How Voters Work](#how-voters-work)
+  * [Implementing Custom Voters](#implementing-custom-voters)
+  * [Voter Configuration Reference](#voter-configuration-reference)
+
+<!-- toc stop -->
+
+
 ### Install
 
 Install with composer
