@@ -22,6 +22,11 @@ return [
 					'roles' => ['oauth_client']
 				]
 			]
+		],
+		'voter_manager' => [],
+		'voter_options' => [
+			'strategy' => 'unanimous',
+			'allow_if_all_abstain' => true
 		]
 	],
 	'controllers' => [
@@ -50,6 +55,7 @@ return [
 					'class' => '\Aeris\ZfAuth\Service\AuthService',
 					'setters' => [
 						'identityProvider' => '@Aeris\ZfAuth\IdentityProvider',
+						'accessDecisionManager' => '@Aeris\ZfAuth\Service\AccessDecisionManager'
 					],
 				],
 				'Aeris\ZfAuth\PluginManager\GuardManager' => [
@@ -64,7 +70,22 @@ return [
 						'guardManager' => '@Aeris\ZfAuth\PluginManager\GuardManager',
 						'rules' => '%zf_auth.guards'
 					]
-				]
+				],
+				'Aeris\ZfAuth\PluginManager\VoterManager' => [
+					'$serviceManager' => [
+						'service_type' => '\Symfony\Component\Security\Core\Authorization\Voter\VoterInterface',
+						'config' => '%zf_auth.voter_manager'
+					]
+				],
+				'Aeris\ZfAuth\Service\AccessDecisionManager' => [
+					'class' => '\Symfony\Component\Security\Core\Authorization\AccessDecisionManager',
+					'args' => [
+						// use all voters from VoterManager
+						'@Aeris\ZfAuth\PluginManager\VoterManager::allServices',
+						'%zf_auth.voter_options.strategy',
+						'%zf_auth.voter_options.allow_if_all_abstain'
+					]
+				],
 			]
 		)
 	]
